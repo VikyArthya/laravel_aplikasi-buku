@@ -57,8 +57,8 @@
                 processData: false, // Jangan proses data
                 success: function(response) {
                     if (response.success) {
-                        // Tampilkan pesan sukses
-                        $('#successMessage').show();
+                        // Redirect ke halaman index buku
+                        window.location.href = '/bukus';
                     } else {
                         alert('Buku gagal diperbarui!');
                     }

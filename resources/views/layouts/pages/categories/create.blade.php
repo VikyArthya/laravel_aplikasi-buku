@@ -36,10 +36,8 @@
                 data: formData, // Kirimkan data form
                 success: function(response) {
                     if (response.success) {
-                        // Tampilkan pesan sukses
-                        $('#successMessage').show();
-                        // Kosongkan input field
-                        $('#name').val('');
+                        // Redirect ke halaman index kategori
+                        window.location.href = '/categories';
                     } else {
                         alert('Kategori gagal ditambahkan!');
                     }

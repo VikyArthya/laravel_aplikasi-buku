@@ -25,10 +25,6 @@
         </div>
         <button type="submit" class="btn btn-primary">Simpan</button>
     </form>
-
-    <div id="successMessage" class="alert alert-success mt-3" style="display: none;">
-        Buku berhasil ditambahkan.
-    </div>
 @endsection
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"
@@ -50,10 +46,8 @@
                 processData: false, // Jangan proses data
                 success: function(response) {
                     if (response.success) {
-                        // Tampilkan pesan sukses
-                        $('#successMessage').show();
-                        // Reset form
-                        $('#addBookForm')[0].reset();
+                        // Redirect ke halaman index buku
+                        window.location.href = '/bukus';
                     } else {
                         alert('Buku gagal ditambahkan!');
                     }

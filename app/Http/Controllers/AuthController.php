@@ -7,34 +7,47 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
-    public function loginView(){
-        if(Auth::check()){
-            return back();
+    /**
+     * Menampilkan halaman login.
+     */
+    public function loginView()
+    {
+        // Jika sudah login, arahkan ke dashboard
+        if (Auth::check()) {
+            return redirect('/dashboard');
         }
+
         return view('layouts.pages.auth.login');
     }
 
-    public function login(Request $request){
-        if(Auth::check()){
-            return back();
-        }
+    /**
+     * Proses login pengguna.
+     */
+    public function login(Request $request)
+    {
+        // Validasi input
         $credentials = $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required'],
         ]);
 
+        // Jika autentikasi berhasil
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-
-            return redirect()->intended('/');
+            return redirect()->intended('/dashboard');
         }
 
+        // Jika gagal, kembali dengan pesan error
         return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
+            'email' => 'Email atau password salah.',
         ])->onlyInput('email');
     }
 
-    public function logout(Request $request){
+    /**
+     * Proses logout pengguna.
+     */
+    public function logout(Request $request)
+    {
         Auth::logout();
 
         $request->session()->invalidate();

@@ -38,8 +38,8 @@
                 data: formData, // Kirimkan data form
                 success: function(response) {
                     if (response.success) {
-                        // Tampilkan pesan sukses
-                        $('#successMessage').show();
+                        // Redirect ke halaman index kategori
+                        window.location.href = '/categories';
                     } else {
                         alert('Kategori gagal diperbarui!');
                     }
