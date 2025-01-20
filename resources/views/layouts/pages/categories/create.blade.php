@@ -14,38 +14,9 @@
         <button type="submit" class="btn btn-primary">Simpan</button>
     </form>
 
-    <div id="successMessage" class="alert alert-success mt-3" style="display: none;">
-        Kategori berhasil ditambahkan.
-    </div>
+    @if (session('success'))
+        <div class="alert alert-success mt-3">
+            {{ session('success') }}
+        </div>
+    @endif
 @endsection
-
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"
-    integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-
-<script>
-    $(document).ready(function() {
-        // Ketika form disubmit
-        $('#categoryForm').on('submit', function(e) {
-            e.preventDefault(); // Mencegah form submit biasa
-
-            var formData = $(this).serialize(); // Ambil data form
-
-            $.ajax({
-                url: $(this).attr('action'), // URL action dari form
-                type: 'POST',
-                data: formData, // Kirimkan data form
-                success: function(response) {
-                    if (response.success) {
-                        // Redirect ke halaman index kategori
-                        window.location.href = '/categories';
-                    } else {
-                        alert('Kategori gagal ditambahkan!');
-                    }
-                },
-                error: function(error) {
-                    alert('Terjadi kesalahan, silakan coba lagi.');
-                }
-            });
-        });
-    });
-</script>

@@ -5,21 +5,32 @@
 @endsection
 
 @section('content')
-    <form id="editBookForm" action="/bukus/{{ $buku->id }}" method="POST" enctype="multipart/form-data">
+    <form action="/bukus/{{ $buku->id }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
+
         <div class="form-group">
             <label for="name">Nama Buku</label>
             <input type="text" name="name" id="name" class="form-control" value="{{ $buku->name }}" required>
         </div>
+
         <div class="form-group">
             <label for="path">Upload Gambar</label>
-            <input type="file" name="path" id="path" class="form-control">
-            @if ($buku->path)
-                <img src="{{ asset('storage/' . $buku->path) }}" alt="Gambar Buku" class="img-thumbnail mt-2"
-                    width="200">
-            @endif
+            <input type="file" name="path" id="path" class="form-control" accept="image/*"
+                onchange="previewImage(event)">
+
+            <!-- Pratinjau Gambar -->
+            <div class="mt-2">
+                @if ($buku->path)
+                    <img id="imagePreview" src="{{ asset('storage/' . $buku->path) }}" alt="Gambar Buku"
+                        class="img-thumbnail" width="200">
+                @else
+                    <img id="imagePreview" src="#" alt="Pratinjau Gambar" class="img-thumbnail" width="200"
+                        style="display: none;">
+                @endif
+            </div>
         </div>
+
         <div class="form-group">
             <label for="category_id">Kategori</label>
             <select name="category_id" id="category_id" class="form-control" required>
@@ -30,43 +41,29 @@
                 @endforeach
             </select>
         </div>
+
         <button type="submit" class="btn btn-primary">Simpan</button>
     </form>
-
-    <div id="successMessage" class="alert alert-success mt-3" style="display: none;">
-        Buku berhasil diperbarui.
-    </div>
 @endsection
 
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"
-    integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-
 <script>
-    $(document).ready(function() {
-        // Ketika form disubmit
-        $('#editBookForm').on('submit', function(e) {
-            e.preventDefault(); // Mencegah form submit biasa
+    function previewImage(event) {
+        const input = event.target;
+        const preview = document.getElementById('imagePreview');
 
-            var formData = new FormData(this); // Ambil data form termasuk file
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
 
-            $.ajax({
-                url: $(this).attr('action'), // URL action dari form
-                type: 'POST',
-                data: formData, // Kirimkan data form
-                contentType: false, // Jangan set content type otomatis
-                processData: false, // Jangan proses data
-                success: function(response) {
-                    if (response.success) {
-                        // Redirect ke halaman index buku
-                        window.location.href = '/bukus';
-                    } else {
-                        alert('Buku gagal diperbarui!');
-                    }
-                },
-                error: function(error) {
-                    alert('Terjadi kesalahan, silakan coba lagi.');
-                }
-            });
-        });
-    });
+
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        } else {
+            preview.src = '#';
+            preview.style.display = 'none';
+        }
+    }
 </script>

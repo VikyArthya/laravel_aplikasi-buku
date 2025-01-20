@@ -34,7 +34,7 @@
                         </thead>
                         <tbody>
                             @foreach ($categories as $category)
-                                <tr id="category-{{ $category->id }}">
+                                <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $category->name }}</td>
                                     <td>
@@ -43,10 +43,14 @@
                                                 class="btn btn-sm btn-warning mr-3">
                                                 Ubah
                                             </a>
-                                            <button type="button" class="btn btn-sm btn-danger"
-                                                onclick="deleteCategory({{ $category->id }})">
-                                                Hapus
-                                            </button>
+                                            <form action="/categories/{{ $category->id }}" method="POST"
+                                                style="display:inline;">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-sm btn-danger">
+                                                    Hapus
+                                                </button>
+                                            </form>
                                         </div>
                                     </td>
                                 </tr>
@@ -58,32 +62,3 @@
         </div>
     </div>
 @endsection
-
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"
-    integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-
-<script>
-    function deleteCategory(id) {
-        if (confirm('Apakah Anda yakin ingin menghapus kategori ini?')) {
-            $.ajax({
-                url: '/categories/' + id,
-                type: 'POST',
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    _method: 'DELETE',
-                },
-                success: function(response) {
-                    if (response.success) {
-                        // Menghapus baris kategori dari tabel
-                        $('#category-' + id).remove();
-                    } else {
-                        alert('Gagal menghapus kategori.');
-                    }
-                },
-                error: function(error) {
-                    alert('Terjadi kesalahan, silakan coba lagi.');
-                }
-            });
-        }
-    }
-</script>
